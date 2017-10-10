@@ -148,7 +148,7 @@ static const struct
                             forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
   if ([parameters count]) {
-    NSString *parametersString = [self _JSONStringForObject:parameters enablePasteboard:YES error:errorRef];
+    NSString *parametersString = [self _JSONStringForObject:parameters enablePasteboard:NO error:errorRef];
     if (!parametersString) {
       return nil;
     }
