@@ -32,11 +32,13 @@
 
 @implementation RPSFriendsViewController {
     NSMutableArray *_tableData;
+    BOOL _isPerformingLogin;
 }
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _isPerformingLogin = NO;
         self.title = NSLocalizedString(@"Rock w/Friends", @"Rock w/Friends");
     }
 
@@ -48,36 +50,38 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    // Login with read permssions
-    FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
-    if (![accessToken.permissions containsObject:@"user_friends"]) {
-        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager logInWithReadPermissions:@[@"user_friends"]
+    if (!_isPerformingLogin) {
+        // Login with read permssions
+        FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+        if (![accessToken.permissions containsObject:@"user_friends"]) {
+            FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+            _isPerformingLogin = YES;
+            [loginManager logInWithPermissions:@[@"user_friends"]
                             fromViewController:self
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                                           if (error) {
-                                               NSLog(@"Failed to login:%@", error);
-                                               return;
-                                           }
+                                               _isPerformingLogin = NO;
+                                               if (error) {
+                                                   NSLog(@"Failed to login:%@", error);
+                                                   return;
+                                               }
 
-                                           FBSDKAccessToken *newToken = [FBSDKAccessToken currentAccessToken];
-                                           if (![newToken.permissions containsObject:@"user_friends"]) {
-                                               // Show alert
-                                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
-                                                                                                   message:@"You must login and grant access to your friends list to use this feature"
-                                                                                                  delegate:self
-                                                                                         cancelButtonTitle:@"OK"
-                                                                                         otherButtonTitles:nil];
-                                               [alertView show];
-                                               [self.navigationController popToRootViewControllerAnimated:YES];
-                                               return;
-                                           }
-
-                                           [self updateFriendsTable];
-                                       }];
-
-    } else {
-        [self updateFriendsTable];
+                                               FBSDKAccessToken *newToken = [FBSDKAccessToken currentAccessToken];
+                                               if (![newToken.permissions containsObject:@"user_friends"]) {
+                                                   // Show alert
+                                                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                                                       message:@"You must login and grant access to your friends list to use this feature"
+                                                                                                      delegate:self
+                                                                                             cancelButtonTitle:@"OK"
+                                                                                             otherButtonTitles:nil];
+                                                   [alertView show];
+                                                   [self.navigationController popToRootViewControllerAnimated:YES];
+                                                   return;
+                                               }
+                                               [self updateFriendsTable];
+                                           }];
+        } else {
+            [self updateFriendsTable];
+        }
     }
 }
 
@@ -129,8 +133,6 @@
 {
     [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
 }
-
-
 
 #pragma mark - private methods
 
@@ -205,6 +207,7 @@
                                                                                             }];
     ++pendingRequestCount;
     [connection addRequest:gameActivityRequest
+            batchEntryName:@"games-post"
          completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
              if (error) {
                  NSLog(@"Failed to get game activity %@:", error);
@@ -213,7 +216,7 @@
                  callback(selectedUserActiviy);
              }
          }
-            batchEntryName:@"games-post"];
+     ];
     // A batch request that id dependent on the previous result
     FBSDKGraphRequest *gameData = [[FBSDKGraphRequest alloc] initWithGraphPath:@"?ids={result=games-post:$.data.*.data.game.id}"
                                                                     parameters:@{
@@ -224,7 +227,7 @@
     [connection addRequest:gameData completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id games, NSError *innerError) {
         if (innerError) {
             // ignore code 2500 errors since that indicates the parent games-post error was empty.
-            if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue] != 2500) {
+            if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue] != 2500) {
                 NSLog(@"Failed to get detailed game data for 'play' objects: %@", innerError);
             }
         } else if (games) {

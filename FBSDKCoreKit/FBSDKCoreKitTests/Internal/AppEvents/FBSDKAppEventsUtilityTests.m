@@ -22,30 +22,36 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAppEvents.h"
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKSettings.h"
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
-{
-  id _mockAppEventsUtility;
-}
 
 @end
 
 @implementation FBSDKAppEventsUtilityTests
+{
+  id _mockAppEventsUtility;
+  id _mockNSLocale;
+}
 
 - (void)setUp
 {
   [super setUp];
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
-  [[[_mockAppEventsUtility stub] andReturn:[[NSUUID UUID] UUIDString]] advertiserID];
+  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
+  [FBSDKAppEvents setUserID:@"test-user-id"];
+  _mockNSLocale = OCMClassMock([NSLocale class]);
 }
 
 - (void)tearDown
 {
-  // Put teardown code here. This method is called after the invocation of each test method in the class.
   [super tearDown];
+
+  [_mockNSLocale stopMocking];
+  [_mockAppEventsUtility stopMocking];
 }
 
 - (void)testLogNotification
@@ -70,32 +76,25 @@
 - (void)testParamsDictionary
 {
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                implicitEventsOnly:NO
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-}
-
-
-- (void)testParamsDictionary2
-{
-  [FBSDKSettings setLimitEventAndDataUsage:NO];
-  NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                implicitEventsOnly:YES
-                                                         shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
 
   [FBSDKSettings setLimitEventAndDataUsage:YES];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
-                                                  implicitEventsOnly:NO
                                            shouldAccessAdvertisingID:NO];
   XCTAssertEqualObjects(@"event2", dict[@"event"]);
   XCTAssertNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"0", dict[@"application_tracking_enabled"]);
+
   [FBSDKSettings setLimitEventAndDataUsage:NO];
+  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                           shouldAccessAdvertisingID:YES];
+  XCTAssertEqualObjects(@"event", dict[@"event"]);
+  XCTAssertNotNil(dict[@"advertiser_id"]);
+  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
 }
 
 - (void)testLogImplicitEventsExists
@@ -103,6 +102,80 @@
   Class FBSDKAppEventsClass = NSClassFromString(@"FBSDKAppEvents");
   SEL logEventSelector = NSSelectorFromString(@"logImplicitEvent:valueToSum:parameters:accessToken:");
   XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
+}
+
+- (void)testGetNumberValue
+{
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: $1,234.56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertTrue([str isEqualToString:@"1234.56"]);
+}
+
+#if BUCK
+- (void)testGetNumberValueWithLocaleFR
+{
+  OCMStub(ClassMethod([_mockNSLocale currentLocale])).andReturn([NSLocale localeWithLocaleIdentifier:@"fr"]);
+
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertEqualObjects(str, @"1234.56");
+}
+#endif
+
+- (void)testGetNumberValueWithLocaleIT
+{
+  OCMStub([_mockNSLocale currentLocale]).
+  _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"it"]));
+
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: 1.234,56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertEqualObjects(str, @"1234.56");
+}
+
+- (void)testIsSensitiveUserData
+{
+  NSString *text = @"test@sample.com";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716 5255 0221 9085";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716525502219085";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716525502219086";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  // number of digits less than 9 will not be considered as credit card number
+  text = @"4716525";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+}
+
+- (void)testFlushReasonToString
+{
+  NSString *result1 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonExplicit];
+  XCTAssertEqualObjects(@"Explicit", result1);
+
+  NSString *result2 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonTimer];
+  XCTAssertEqualObjects(@"Timer", result2);
+
+  NSString *result3 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonSessionChange];
+  XCTAssertEqualObjects(@"SessionChange", result3);
+
+  NSString *result4 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonPersistedEvents];
+  XCTAssertEqualObjects(@"PersistedEvents", result4);
+
+  NSString *result5 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEventThreshold];
+  XCTAssertEqualObjects(@"EventCountThreshold", result5);
+
+  NSString *result6 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+  XCTAssertEqualObjects(@"EagerlyFlushingEvent", result6);
 }
 
 @end

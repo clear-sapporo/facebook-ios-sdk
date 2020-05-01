@@ -16,21 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "TargetConditionals.h"
 
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#if TARGET_OS_TV
+
+#import "FBSDKCoreKitImport.h"
+
+#import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(FBDeviceShareButton)
 @interface FBSDKDeviceShareButton : FBSDKDeviceButton
 
 /**
   The required content to share. The button is disabled until this is set.
 
-- See:FBSDKDeviceShareViewController
+ @see FBSDKDeviceShareViewController
  */
 @property (nullable, nonatomic, strong) id<FBSDKSharingContent> shareContent;
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

@@ -17,14 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
-
 #import <XCTest/XCTest.h>
 
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
 #import "FBSDKShareModelTestUtility.h"
+#import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareUtility.h"
 
 @interface FBSDKSharePhotoContentTests : XCTestCase
@@ -80,7 +82,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -89,9 +91,9 @@
   FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"photos");
 }
 
@@ -101,9 +103,9 @@
   content.photos = @[];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"photos");
 }
 

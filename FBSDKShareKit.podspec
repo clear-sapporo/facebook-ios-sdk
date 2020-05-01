@@ -2,9 +2,9 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "FBSDKShareKit"
-  s.version      = "4.18.0"
-  s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's Sharing Features"
+  s.name         = 'FBSDKShareKit'
+  s.version      = '6.5.2'
+  s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
   s.description  = <<-DESC
                    The Facebook SDK for iOS ShareKit framework provides:
@@ -13,73 +13,41 @@ Pod::Spec.new do |s|
                    * Publish content and open graph stories with the Graph API
                    DESC
 
-  s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
+  s.homepage     = 'https://developers.facebook.com/docs/ios/'
+  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '7.0'
-  s.tvos.deployment_target = '9.0'
+  s.ios.deployment_target = '8.0'
+  s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.18.0"
+  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
+                     :tag => "v#{s.version}"
                     }
 
-  s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
-  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
+  s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
+  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
 
   s.requires_arc = true
 
-  s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
-  s.ios.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
-  s.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}'
-  s.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.{h,m}'
-  s.tvos.public_header_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h',
-                               'FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h'
+  s.default_subspecs = 'Share'
+  s.swift_version = '5.0'
 
-  s.header_dir = "FBSDKShareKit"
-  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.dependency 'FBSDKCoreKit'
+  s.header_dir = 'FBSDKShareKit'
+  s.prefix_header_contents = '#define FBSDKCOCOAPODS'
 
+  s.subspec 'Share' do |ss|
+    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
+
+    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*'
+    ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
+    ss.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
+  end
+
+  s.subspec 'Swift' do |ss|
+    ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
+    ss.dependency 'FBSDKShareKit/Share'
+    ss.source_files   = 'FBSDKShareKit/FBSDKShareKit/Swift/*.{swift}'
+    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/Swift/Exports.swift'
+  end
 end

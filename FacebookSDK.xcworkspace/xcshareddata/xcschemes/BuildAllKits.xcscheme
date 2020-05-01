@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -43,9 +43,23 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
-               BuildableName = "FBSDKShareKit-universal"
-               BlueprintName = "FBSDKShareKit-universal"
+               BuildableName = "FBSDKShareKit-Universal"
+               BlueprintName = "FBSDKShareKit-Universal"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F4F7CA2323F497200030A346"
+               BuildableName = "FBSDKGamingServicesKit-Universal"
+               BlueprintName = "FBSDKGamingServicesKit-Universal"
+               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -90,34 +104,6 @@
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D5C618081DC90E9000C406B9"
-               BuildableName = "FBSDKShareTray-Universal"
-               BlueprintName = "FBSDKShareTray-Universal"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
-               BuildableName = "FBSDKShareTrayTests.xctest"
-               BlueprintName = "FBSDKShareTrayTests"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -125,6 +111,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BuildableName = "FBSDKCoreKit-Universal"
+            BlueprintName = "FBSDKCoreKit-Universal"
+            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -156,28 +151,7 @@
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
-               BuildableName = "FBSDKShareTrayTests.xctest"
-               BlueprintName = "FBSDKShareTrayTests"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
-            BuildableName = "FBSDKCoreKit-Universal"
-            BlueprintName = "FBSDKCoreKit-Universal"
-            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -198,8 +172,6 @@
             ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

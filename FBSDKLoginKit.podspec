@@ -2,9 +2,9 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "FBSDKLoginKit"
-  s.version      = "4.18.0"
-  s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
+  s.name         = 'FBSDKLoginKit'
+  s.version      = '6.5.2'
+  s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API'
 
   s.description  = <<-DESC
                    The Facebook SDK for iOS LoginKit framework provides:
@@ -13,25 +13,39 @@ Pod::Spec.new do |s|
                    * Simpler Graph API access to provide more social context.
                    DESC
 
-  s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
+  s.homepage     = 'https://developers.facebook.com/docs/ios/'
+  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, "9.0"
-  s.ios.deployment_target = "7.0"
+  s.platform     = :ios, :tvos
+  s.ios.deployment_target = '8.0'
+  s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.18.0"
+  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
+                     :tag => "v#{s.version}"
                     }
 
-  s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
+  s.ios.weak_frameworks = 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
+  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
 
   s.requires_arc = true
 
-  s.source_files   = "FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}"
-  s.public_header_files = "FBSDKLoginKit/FBSDKLoginKit/*.{h}"
-  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.dependency 'FBSDKCoreKit'
+  s.default_subspecs = 'Login'
+  s.swift_version = '5.0'
+  s.prefix_header_contents = '#define FBSDKCOCOAPODS'
+
+  s.subspec 'Login' do |ss|
+    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
+    ss.exclude_files = 'FBSDKLoginKit/FBSDKLoginKit/include/**/*'
+    ss.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
+    ss.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
+  end
+
+  s.subspec 'Swift' do |ss|
+    ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
+    ss.dependency 'FBSDKLoginKit/Login'
+    ss.exclude_files = 'FBSDKLoginKit/FBSDKLoginKit/Swift/Exports.swift'
+    ss.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/Swift/*.{swift}'
+  end
 
 end

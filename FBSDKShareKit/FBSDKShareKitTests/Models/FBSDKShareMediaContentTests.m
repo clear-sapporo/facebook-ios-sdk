@@ -18,8 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <FBSDKShareKit/FBSDKShareMediaContent.h>
-
+#import "FBSDKShareMediaContent.h"
 #import "FBSDKShareModelTestUtility.h"
 
 @interface FBSDKShareMediaContentTests : XCTestCase
@@ -43,7 +42,7 @@
 
 - (void)testCoding
 {
-  FBSDKShareMediaContent *content = [FBSDKShareModelTestUtility mediaContent];
+  FBSDKShareVideo *content = (FBSDKShareVideo *) [FBSDKShareModelTestUtility mediaContent].media.firstObject;
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   FBSDKShareVideo *unarchivedContent = [NSKeyedUnarchiver unarchiveObjectWithData:data];
   XCTAssertEqualObjects(unarchivedContent, content);

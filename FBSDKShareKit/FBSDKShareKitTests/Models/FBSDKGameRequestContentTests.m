@@ -16,12 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKGameRequestContent.h>
-
 #import <XCTest/XCTest.h>
 
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKGameRequestContent.h"
 #import "FBSDKShareUtility.h"
 
 @interface FBSDKGameRequestContentTests : XCTestCase
@@ -188,7 +191,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateGameRequestContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -196,9 +199,9 @@
 {
   NSError *error;
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateGameRequestContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], argumentName);
 }
 

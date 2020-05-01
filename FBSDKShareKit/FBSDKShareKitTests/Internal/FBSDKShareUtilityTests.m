@@ -19,9 +19,12 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
 
@@ -30,17 +33,12 @@
 
 @implementation FBSDKShareUtilityTests
 
-- (NSURL *)fileURL
-{
-  return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
 - (void)testShareLinkContentValidationWithNilValues
 {
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-  XCTAssertNotNil(content);
+  XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -51,10 +49,19 @@
   content.peopleIDs = [FBSDKShareModelTestUtility peopleIDs];
   content.placeID = [FBSDKShareModelTestUtility placeID];
   content.ref = [FBSDKShareModelTestUtility ref];
-  XCTAssertNotNil(content);
+  XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
+}
+
+- (void)testShareLinkContentParameters
+{
+  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  content.contentURL = [FBSDKShareModelTestUtility contentURL];
+  XCTAssertNotNil(content.shareUUID);
+  NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault shouldFailOnDataError:YES];
+  XCTAssertEqualObjects(content.contentURL, parameters[@"messenger_link"], @"Incorrect messenger_link param.");
 }
 
 @end

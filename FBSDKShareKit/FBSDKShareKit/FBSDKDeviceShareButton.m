@@ -16,10 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKDeviceShareButton.h"
+#import "TargetConditionals.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#if TARGET_OS_TV
+
+#import "FBSDKDeviceShareButton.h"
 #import "FBSDKDeviceShareViewController.h"
+
+#if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 @implementation FBSDKDeviceShareButton
 
@@ -67,3 +75,5 @@
 }
 
 @end
+
+#endif

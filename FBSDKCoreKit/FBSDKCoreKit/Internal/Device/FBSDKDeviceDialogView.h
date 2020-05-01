@@ -16,11 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_TV
+
 #import <UIKit/UIKit.h>
 
+NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate;
 
 // internal class, APIs are subject to change.
+NS_SWIFT_NAME(FBDeviceDialogView)
 @interface FBSDKDeviceDialogView : UIView
 
 @property (nonatomic, weak) id<FBSDKDeviceDialogViewDelegate> delegate;
@@ -31,8 +37,11 @@
 
 @end
 
+NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate <NSObject>
 
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView;
 
 @end
+
+#endif

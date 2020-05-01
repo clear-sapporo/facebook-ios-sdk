@@ -16,11 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_TV
+
 #import "FBSDKDeviceShareViewController.h"
 
+#ifdef FBSDKCOCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareLinkContent.h"
-#import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareUtility.h"
 
 @implementation FBSDKDeviceShareViewController
@@ -116,8 +123,7 @@
     }
     return nil;
   }
-  if ([_shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-      [_shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  if ([_shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     NSString *unused;
     NSDictionary *params;
     [FBSDKShareUtility buildWebShareContent:_shareContent
@@ -135,3 +141,5 @@
   return nil;
 }
 @end
+
+#endif

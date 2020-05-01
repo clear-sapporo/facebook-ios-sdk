@@ -16,11 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_TV
+
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+#import "FBSDKCoreKitImport.h"
 
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   A delegate for `FBSDKDeviceShareViewController`
  */
+NS_SWIFT_NAME(DeviceShareViewControllerDelegate)
 @protocol FBSDKDeviceShareViewControllerDelegate <NSObject>
 
 /**
@@ -37,7 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
  This can happen if the user tapped cancel, or menu on their Siri remote, or if the
   device code has expired. You will not be informed if the user actually posted a share to Facebook.
  */
-- (void)deviceShareViewControllerDidComplete:(FBSDKDeviceShareViewController *)viewController error:(nullable NSError *)error;
+- (void)deviceShareViewControllerDidComplete:(FBSDKDeviceShareViewController *)viewController
+                                       error:(nullable NSError *)error;
 
 @end
 
@@ -58,23 +64,26 @@ NS_ASSUME_NONNULL_BEGIN
                     animated:YES
                   completion:NULL];
  */
+NS_SWIFT_NAME(FBDeviceShareViewController)
 @interface FBSDKDeviceShareViewController : FBSDKDeviceViewControllerBase
 
 /**
   Initializes a new instance with share content.
- - Parameter shareContent: The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
+ @param shareContent The share content. Only `FBSDKShareLinkContent` is supported.
 
  Invalid content types will result in notifying the delegate with an error when the view controller is presented.
 
  For `FBSDKShareLinkContent`, only contentURL is used (e.g., <FBSDKSharingContent> properties are not supported)
- For `FBSDKShareOpenGraphContent`, only the action is used (e.g., <FBSDKSharingContent> properties are not supported).
  */
-- (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent
+NS_SWIFT_NAME(init(content:))
+NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
-- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil  NS_UNAVAILABLE;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
   The delegate.
@@ -89,3 +98,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

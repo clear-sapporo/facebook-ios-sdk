@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import "FBSDKShareLinkContent.h"
 
 #import <XCTest/XCTest.h>
 
@@ -35,14 +39,11 @@
 - (void)testProperties
 {
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertEqualObjects(content.contentDescription, [FBSDKShareModelTestUtility linkContentDescription]);
   XCTAssertEqualObjects(content.contentURL, [FBSDKShareModelTestUtility contentURL]);
   XCTAssertEqualObjects(content.hashtag, [FBSDKShareModelTestUtility hashtag]);
-  XCTAssertEqualObjects(content.imageURL, [FBSDKShareModelTestUtility linkImageURL]);
   XCTAssertEqualObjects(content.peopleIDs, [FBSDKShareModelTestUtility peopleIDs]);
   XCTAssertEqualObjects(content.placeID, [FBSDKShareModelTestUtility placeID]);
   XCTAssertEqualObjects(content.ref, [FBSDKShareModelTestUtility ref]);
-  XCTAssertEqualObjects(content.contentTitle, [FBSDKShareModelTestUtility linkContentTitle]);
   XCTAssertEqualObjects(content.quote, [FBSDKShareModelTestUtility quote]);
 }
 
@@ -78,6 +79,7 @@
 {
   NSError *error;
   XCTAssertTrue([FBSDKShareUtility validateShareContent:[FBSDKShareModelTestUtility linkContent]
+                                          bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                   error:&error]);
   XCTAssertNil(error);
 }
@@ -85,9 +87,9 @@
 - (void)testValidationWithNilContent
 {
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:nil error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:nil bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"shareContent");
   XCTAssertNil(error.userInfo[FBSDKErrorArgumentValueKey]);
 }

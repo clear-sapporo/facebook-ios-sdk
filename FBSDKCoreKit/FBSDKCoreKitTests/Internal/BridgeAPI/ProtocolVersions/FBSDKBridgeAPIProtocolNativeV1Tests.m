@@ -42,10 +42,10 @@
 {
   [super setUp];
 
-  self.actionID = [[NSUUID UUID] UUIDString];
-  self.scheme = [[NSUUID UUID] UUIDString];
-  self.methodName = [[NSUUID UUID] UUIDString];
-  self.methodVersion = [[NSUUID UUID] UUIDString];
+  self.actionID = [NSUUID UUID].UUIDString;
+  self.scheme = [NSUUID UUID].UUIDString;
+  self.methodName = [NSUUID UUID].UUIDString;
+  self.methodVersion = [NSUUID UUID].UUIDString;
   self.protocol = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:self.scheme];
 }
 
@@ -69,7 +69,7 @@
   NSDictionary *queryParameters = [FBSDKUtility dictionaryWithQueryString:requestURL.query];
   NSSet *expectedKeys = [NSSet setWithObjects:@"bridge_args", @"method_args", @"version", nil];
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
-  XCTAssertEqualObjects([FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL], parameters);
+  XCTAssertEqualObjects([FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL], parameters);
 }
 
 - (void)testNilResponseParameters
@@ -155,7 +155,7 @@
                                        };
   NSDictionary *queryParameters = @{
                                     @"bridge_args": @{
-                                        @"action_id": [[NSUUID UUID] UUIDString],
+                                        @"action_id": [NSUUID UUID].UUIDString,
                                         },
                                     @"method_results": responseParameters,
                                     };
@@ -188,7 +188,7 @@
                                                       error:&error]);
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqual(error.domain, FBSDKErrorDomain);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"bridge_args");
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentValueKey], bridgeArgs);
@@ -215,7 +215,7 @@
                                                       error:&error]);
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqual(error.domain, FBSDKErrorDomain);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"method_results");
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentValueKey], methodResults);
@@ -309,7 +309,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"data"] = [self _testDataSerialized:(NSData *)parameters[@"data"]];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
   NSData *decodedData = [FBSDKBase64 decodeAsData:methodArgs[@"data"][@"fbAppBridgeType_jsonReadyValue"]];
   XCTAssertEqualObjects(decodedData, parameters[@"data"]);
@@ -342,7 +342,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"image"] = [self _testImageSerialized:(UIImage *)parameters[@"image"]];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
   NSData *decodedData = [FBSDKBase64 decodeAsData:methodArgs[@"image"][@"fbAppBridgeType_jsonReadyValue"]];
   XCTAssertNotNil([UIImage imageWithData:decodedData]);
@@ -351,7 +351,7 @@
 - (void)testRequestParametersWithDataPasteboard
 {
   id pasteboard = [OCMockObject mockForClass:[UIPasteboard class]];
-  NSString *pasteboardName = [[NSUUID UUID] UUIDString];
+  NSString *pasteboardName = [NSUUID UUID].UUIDString;
   NSData *data = [self _testData];
   [[[pasteboard stub] andReturn:pasteboardName] name];
   [[pasteboard expect] setData:data forPasteboardType:@"com.facebook.Facebook.FBAppBridgeType"];
@@ -381,14 +381,14 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"data"] = [self _testDataContainerWithPasteboardName:pasteboardName tag:@"data"];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
 }
 
 - (void)testRequestParametersWithImagePasteboard
 {
   id pasteboard = [OCMockObject mockForClass:[UIPasteboard class]];
-  NSString *pasteboardName = [[NSUUID UUID] UUIDString];
+  NSString *pasteboardName = [NSUUID UUID].UUIDString;
   UIImage *image = [self _testImage];
   NSData *data = [self _testDataWithImage:image];
   [[[pasteboard stub] andReturn:pasteboardName] name];
@@ -419,7 +419,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"image"] = [self _testDataContainerWithPasteboardName:pasteboardName tag:@"png"];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
 }
 
@@ -427,8 +427,8 @@
 {
   NSMutableDictionary *encoded = [[NSMutableDictionary alloc] init];
   [queryParameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    if (![FBSDKInternalUtility dictionary:encoded setJSONStringForObject:obj forKey:key error:NULL]) {
-      [FBSDKInternalUtility dictionary:encoded setObject:obj forKey:key];
+    if (![FBSDKBasicUtility dictionary:encoded setJSONStringForObject:obj forKey:key error:NULL]) {
+      [FBSDKBasicUtility dictionary:encoded setObject:obj forKey:key];
     }
   }];
   return [encoded copy];

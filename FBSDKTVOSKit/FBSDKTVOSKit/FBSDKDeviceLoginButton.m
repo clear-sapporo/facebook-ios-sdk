@@ -18,7 +18,11 @@
 
 #import "FBSDKDeviceLoginButton.h"
 
+#ifdef FBSDKCOCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKDeviceLoginViewController.h"
 
 @interface FBSDKDeviceLoginButton() <FBSDKDeviceLoginViewControllerDelegate>
@@ -106,7 +110,7 @@
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
-  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
+  if (notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
     [self _updateContent];
   }
 }
@@ -151,8 +155,7 @@
   } else {
     FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
     vc.delegate = self;
-    vc.readPermissions = self.readPermissions;
-    vc.publishPermissions = self.publishPermissions;
+    vc.permissions = self.permissions;
     vc.redirectURL = self.redirectURL;
     [parentViewController presentViewController:vc animated:YES completion:NULL];
   }
@@ -204,8 +207,8 @@
       [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         NSString *userID = [FBSDKTypeUtility stringValue:result[@"id"]];
         if (!error && [[FBSDKAccessToken currentAccessToken].userID isEqualToString:userID]) {
-          _userName = [FBSDKTypeUtility stringValue:result[@"name"]];
-          _userID = userID;
+          self->_userName = [FBSDKTypeUtility stringValue:result[@"name"]];
+          self->_userID = userID;
         }
       }];
     }
@@ -228,9 +231,9 @@
   [self.delegate deviceLoginButtonDidLogIn:self];
 }
 
-- (void)deviceLoginViewControllerDidFail:(FBSDKDeviceLoginViewController *)viewController error:(NSError *)error
+- (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error
 {
-  [self.delegate deviceLoginButtonDidFail:self error:error];
+  [self.delegate deviceLoginButton:self didFailWithError:error];
 }
 
 @end

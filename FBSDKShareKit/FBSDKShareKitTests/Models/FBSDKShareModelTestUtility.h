@@ -18,30 +18,18 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKHashtag.h>
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
-#import <FBSDKShareKit/FBSDKShareMediaContent.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
-#import <FBSDKShareKit/FBSDKShareVideo.h>
-#import <FBSDKShareKit/FBSDKShareVideoContent.h>
-
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphBoolValueKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphFloatValueKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringArrayKey;
-extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
+#import "FBSDKCameraEffectArguments.h"
+#import "FBSDKHashtag.h"
+#import "FBSDKShareCameraEffectContent.h"
+#import "FBSDKShareLinkContent.h"
+#import "FBSDKShareMediaContent.h"
+#import "FBSDKSharePhoto.h"
+#import "FBSDKSharePhotoContent.h"
+#import "FBSDKShareVideo.h"
+#import "FBSDKShareVideoContent.h"
 
 @interface FBSDKShareModelTestUtility : NSObject
 
-+ (NSArray *)allOpenGraphActionKeys;
-+ (NSArray *)allOpenGraphObjectKeys;
 + (NSURL *)contentURL;
 + (NSURL *)fileURL;
 + (FBSDKHashtag *)hashtag;
@@ -50,23 +38,9 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)linkContentDescription;
 + (NSString *)linkContentTitle;
 + (NSURL *)linkImageURL;
-+ (FBSDKShareOpenGraphAction *)openGraphAction;
-+ (NSString *)openGraphActionType;
-+ (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID;
-+ (BOOL)openGraphBoolValue;
-+ (FBSDKShareOpenGraphContent *)openGraphContent;
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithObjectID;
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithURLOnly;
-+ (double)openGraphDoubleValue;
-+ (float)openGraphFloatValue;
-+ (NSInteger)openGraphIntegerValue;
-+ (NSArray *)openGraphNumberArray;
-+ (FBSDKShareOpenGraphObject *)openGraphObject;
-+ (NSString *)openGraphObjectID;
-+ (NSArray *)openGraphStringArray;
-+ (NSString *)openGraphString;
 + (NSArray *)peopleIDs;
 + (FBSDKSharePhotoContent *)photoContent;
++ (FBSDKSharePhotoContent *)photoContentWithFileURLs;
 + (FBSDKSharePhotoContent *)photoContentWithImages;
 + (UIImage *)photoImage;
 + (NSURL *)photoImageURL;
@@ -86,5 +60,9 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSURL *)videoURL;
 + (NSArray *)media;
 + (FBSDKShareMediaContent *)mediaContent;
++ (FBSDKShareMediaContent *)multiVideoMediaContent;
++ (NSString *)cameraEffectID;
++ (FBSDKCameraEffectArguments *)cameraEffectArguments;
++ (FBSDKShareCameraEffectContent *)cameraEffectContent;
 
 @end
